@@ -51,7 +51,7 @@ public class EnemyAI : MonoBehaviour
     public void ReceiveDamage(float val) {
     	this.health -= val;
     	if (this.health <= 0f) Die();
-    	this.gameObject.GetComponent<Rigidbody>().AddForce(-transform.forward * knockbackOnDamageTaken, ForceMode.Impulse);
+    	//this.gameObject.GetComponent<Rigidbody>().AddForce(-transform.forward * knockbackOnDamageTaken, ForceMode.Impulse);
     }
 
     public void Die() {

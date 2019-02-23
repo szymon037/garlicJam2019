@@ -63,6 +63,14 @@ public class PlayerStats
 		foreach (var skill in skills) {
 			timers.Add(skill.skillName, 0f);
 		}
+
+		Dictionary<string, KeyValuePair<float, float?>> skillData = new Dictionary<string, KeyValuePair<float, float?>>() {
+			{"OnionsSadness", new KeyValuePair<float, float?>(15f, null)}
+		};
+		
+		foreach (var entry in skillData) {
+			skills.Add(new Skill(entry.Key, entry.Value.Key, entry.Value.Value));
+		}
 	}	
 
 	public void ChangeHealth(float value) {

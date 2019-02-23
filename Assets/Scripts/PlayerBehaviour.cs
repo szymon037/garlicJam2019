@@ -1,4 +1,5 @@
-﻿using System.Collections;
+﻿//#define DEBUG
+using System.Collections;
 using System.Linq;
 using System.Collections.Generic;
 using UnityEngine;
@@ -23,6 +24,12 @@ public class PlayerBehaviour : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
+        #if DEBUG
+            foreach (var skill in PlayerStats.GetInstance().skills) {
+                Debug.Log(string.Format("{0}, {1}, {2}", skill.skillName, skill.cooldown, (skill.damage == null ? "null" : skill.damage.ToString())));
+            }
+            PlayerStats.GetInstance().skills[0].usage(Vector3.zero, Vector3.zero);
+        #endif
         if (Input.GetMouseButtonDown(0)) {
             Shoot();
         }
@@ -57,10 +64,10 @@ public class PlayerBehaviour : MonoBehaviour
                 return;
             }
         }
-        this.fireRateTimer = Mathf.Clamp(this.activeWeapon.baseFireRate - (float)PlayerStats.GetInstance().stats.fireRateBonus, maximumFireRate, 100f);
+        this.fireRateTimer = Mathf.Clamp(this.activeWeapon.baseFireRate - PlayerStats.GetInstance().stats.fireRateBonus, maximumFireRate, 100f);
         /*spawn a bullet*/
         GameObject bullet = Instantiate(this.activeWeapon.bulletPrefab, shootpoint.position, Quaternion.identity) as GameObject;
-        bullet.GetComponent<Bullet>().Init(this.activeWeapon.baseDamage, this.activeWeapon.bulletSpeed, transform.forward);
+        bullet.GetComponent<Bullet>().Init(this.activeWeapon.baseDamage + PlayerStats.GetInstance().stats.damageBonus, this.activeWeapon.bulletSpeed, transform.forward);
     }
 
     public void ChangeWeapon(int index) {
@@ -71,7 +78,7 @@ public class PlayerBehaviour : MonoBehaviour
     }
 
     public void UpdateCooldowns() {
-        foreach (var key in PlayerStats.GetInstance().timers.Keys) {
+        foreach (var key in PlayerStats.GetInstance().timers.Keys.ToList()) {
             if (PlayerStats.GetInstance().timers[key] > 0f) PlayerStats.GetInstance().timers[key] -= Time.deltaTime;
         }
     }
