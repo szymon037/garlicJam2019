@@ -14,20 +14,41 @@ public class PlayerBehaviour : MonoBehaviour
     public float fireRateTimer = 0f;
     public Transform shootpoint;
     public float hitTimer = 0f;
+    public Vector3 moveDir = Vector3.zero;
+    public Rigidbody rb = null;
+    public Camera tpsCamera = null;
+    public Vector3 offset = new Vector3(4f, 1f, 4f);
+    public float rotationspeed;
 
     // Start is called before the first frame update
     void Start()
     {
+        rb = GetComponent<Rigidbody>();
+        rb.constraints = RigidbodyConstraints.FreezeRotationZ | RigidbodyConstraints.FreezeRotationX | RigidbodyConstraints.FreezeRotationY | RigidbodyConstraints.FreezePositionY;
         weaponsData.ForEach(w => ammoCountsForWeapons.Add(w.weaponName, w.infiniteAmmo ? null : (int?)0));
         activeWeapon = weaponsData[0];
+        //tpsCamera.transform.position = transform.position + offset;
     }
 
     // Update is called once per frame
     void Update()
-    {
+    {   
+        Debug.DrawRay(this.transform.position, transform.forward * 20, Color.red, 5f);
+        //tpsCamera.transform.position = transform.position + offset;
+        //tpsCamera.transform.LookAt(this.transform);
         if (Input.GetMouseButton(0)) {
             Shoot();
         }
+
+        float x, z;
+        x = Input.GetAxisRaw("Horizontal");
+        z = Input.GetAxisRaw("Vertical");
+
+        transform.Rotate(0f, rotationspeed * Input.GetAxis("Mouse X"), 0f);
+
+        transform.Translate(x * PlayerStats.GetInstance().stats.speed * Time.deltaTime, 0, z * PlayerStats.GetInstance().stats.speed * Time.deltaTime);
+
+       // rb.velocity = (!Mathf.Approximately(x, 0f) && !Mathf.Approximately(z, 0f) ? new Vector3(x, 0f, z) : transform.forward * PlayerStats.GetInstance().stats.speed);
 
         string input = Input.inputString;
 

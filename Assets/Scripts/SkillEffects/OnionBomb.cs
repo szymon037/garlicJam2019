@@ -21,7 +21,6 @@ public class OnionBomb : MonoBehaviour
     	this.radius = radius;
     	this.damage = damage;
     	Destroy(this.gameObject, detonationTime);
-
     }
 
     public void Explode() {

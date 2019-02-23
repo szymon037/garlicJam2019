@@ -11,7 +11,8 @@ public class Bullet : MonoBehaviour
 	//public bool isExplosive = false;
     // Start is called before the first frame update
     void Start()
-    {
+    {	
+    	GetComponent<Rigidbody>().constraints = RigidbodyConstraints.FreezePositionY;
         Destroy(this.gameObject, 5f);
     }
 
@@ -23,7 +24,7 @@ public class Bullet : MonoBehaviour
 
     public void Init(float damage, float speed, Vector3 direction/*, bool isExplosive*/) {
     	this.damage = damage;
-    	this.speed = speed;
+    	this.speed = speed * speed * Time.deltaTime;
     	this.direction = direction;
     	//this.isExplosive = isExplosive;
     }
