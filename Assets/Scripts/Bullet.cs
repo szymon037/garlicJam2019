@@ -13,7 +13,7 @@ public class Bullet : MonoBehaviour
     void Start()
     {	
     	GetComponent<Rigidbody>().constraints = RigidbodyConstraints.FreezePositionY;
-        Destroy(this.gameObject, 5f);
+        Destroy(this.gameObject, 2f);
     }
 
     // Update is called once per frame
@@ -24,7 +24,7 @@ public class Bullet : MonoBehaviour
 
     public void Init(float damage, float speed, Vector3 direction/*, bool isExplosive*/) {
     	this.damage = damage;
-    	this.speed = speed * speed * Time.deltaTime;
+    	this.speed = Mathf.Pow(speed, 2) * Time.deltaTime * 2f;
     	this.direction = direction;
     	//this.isExplosive = isExplosive;
     }

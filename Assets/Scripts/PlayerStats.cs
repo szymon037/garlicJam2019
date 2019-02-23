@@ -17,7 +17,9 @@ public class Attributes {
 		fireRateBonus = 0f;
 		health = maxHealth = 150f;
 		damageBonus = 0f;
-	}	
+	}
+
+	public override string ToString() => string.Format("{0}, {1}, {2}, {3}, {4}", speed,fireRateBonus,damageBonus, health,maxHealth);	
 }
 
 public class Skill {
@@ -110,25 +112,32 @@ public class PlayerStats
 		if (currency < currencyCost) return;
 		else AcquireCurrency(-currencyCost);
 		FieldInfo field = null;
-		switch (attrName) {
-			case "speed":
-				field = stats.GetType().GetField(attrName, BindingFlags.Instance | BindingFlags.Public);
-				field.SetValue(stats, (float)field.GetValue(stats) + 1.5f);
-				break;
-			case "fireRateBonus":
-				field = stats.GetType().GetField(attrName, BindingFlags.Instance | BindingFlags.Public);
-				field.SetValue(stats, (float)field.GetValue(stats) + 0.05f);
-				break;
-			case "damageBonus":
-				field = stats.GetType().GetField(attrName, BindingFlags.Instance | BindingFlags.Public);
-				field.SetValue(stats, (float)field.GetValue(stats) + 2.5f);
-				break;
-			case "health":
-				field = stats.GetType().GetField(attrName, BindingFlags.Instance | BindingFlags.Public);
-				FieldInfo anotherField = stats.GetType().GetField("maxHealth", BindingFlags.Instance | BindingFlags.Public);
-				anotherField.SetValue(stats, (float)anotherField.GetValue(stats) + 15f);
-				field.SetValue(stats, (float)field.GetValue(stats) + 15f);
-				break;
+		// switch (attrName) {
+		// 	case "speed":
+		// 		field = stats.GetType().GetField(attrName, BindingFlags.Instance | BindingFlags.Public);
+		// 		field.SetValue(stats, (float)field.GetValue(stats) + 1f);
+		// 		break;
+		// 	case "fireRateBonus":
+		// 		field = stats.GetType().GetField(attrName, BindingFlags.Instance | BindingFlags.Public);
+		// 		field.SetValue(stats, (float)field.GetValue(stats) + 0.05f);
+		// 		break;
+		// 	case "damageBonus":
+		// 		field = stats.GetType().GetField(attrName, BindingFlags.Instance | BindingFlags.Public);
+		// 		field.SetValue(stats, (float)field.GetValue(stats) + 2.5f);
+		// 		break;
+		// 	case "health":
+		// 		field = stats.GetType().GetField(attrName, BindingFlags.Instance | BindingFlags.Public);
+		// 		FieldInfo anotherField = stats.GetType().GetField("maxHealth", BindingFlags.Instance | BindingFlags.Public);
+		// 		anotherField.SetValue(stats, (float)anotherField.GetValue(stats) + 15f);
+		// 		field.SetValue(stats, (float)field.GetValue(stats) + 15f);
+		// 		break;
+		// }
+		if (attrName == "health") {
+			FieldInfo f = stats.GetType().GetField("maxHealth", BindingFlags.Instance | BindingFlags.Public);
+			f.SetValue(stats, (float)f.GetValue(stats) + UpgradeManager.upgradeValues[attrName]);
 		}
+		field = stats.GetType().GetField(attrName, BindingFlags.Instance | BindingFlags.Public);
+		field.SetValue(stats, (float)field.GetValue(stats) + UpgradeManager.upgradeValues[attrName]);
+		Debug.Log(stats.ToString());
 	}
 }
