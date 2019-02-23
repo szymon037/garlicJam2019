@@ -66,8 +66,8 @@ public class rotation : MonoBehaviour
         if ((Input.GetKey(KeyCode.W) || Input.GetKey(KeyCode.UpArrow)) && !isRotating)
         {
             playerBody.velocity += transform.right * speed;
-        }*/
-
+        }
+        */
         playerBody.velocity += gravityVector;
 
         if ((topDownZ && (Vector3.Scale(rightVector, transform.position).x - Vector3.Scale(rightVector, lastMove).x > 0f)) || 
@@ -88,7 +88,7 @@ public class rotation : MonoBehaviour
 
     void OnTriggerEnter(Collider other)
     {
-        if (other.gameObject.tag == "rotateZ")
+        if (other.gameObject.tag == "rotate")
         {
             if (movingForward) 
             {              
@@ -107,7 +107,7 @@ public class rotation : MonoBehaviour
 
     void OnTriggerStay(Collider other)
     {
-        if (other.gameObject.tag == "rotateZ")
+        if (other.gameObject.tag == "rotate")
         {
             if (!didCheckPosition)
             {
@@ -177,7 +177,7 @@ public class rotation : MonoBehaviour
 
     void OnTriggerExit(Collider other)
     {
-        if (other.gameObject.tag == "rotateZ")
+        if (other.gameObject.tag == "rotate")
         {
             gravityVector = -transform.up * gravity;
             didCheckPosition = false;
