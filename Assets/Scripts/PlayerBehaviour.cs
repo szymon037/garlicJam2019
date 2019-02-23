@@ -74,9 +74,9 @@ public class PlayerBehaviour : MonoBehaviour
             PlayerStats.GetInstance().ToggleFlag("isHit", false);
         }
 
-        //UpdateCooldowns();
+        UpdateCooldowns();
 
-       // DebugTimers();
+        DebugTimers();
 
     }
 

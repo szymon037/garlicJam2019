@@ -13,7 +13,7 @@ MonoBehaviour:
   m_Name: BasicWeapon
   m_EditorClassIdentifier: 
   weaponName: Revolver
-  baseFireRate: 0.33
+  baseFireRate: 0.00001
   baseDamage: 15
   bulletSpeed: 5
   maxAmmo: 0

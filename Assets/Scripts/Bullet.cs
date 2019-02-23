@@ -29,9 +29,10 @@ public class Bullet : MonoBehaviour
     	//this.isExplosive = isExplosive;
     }
 
-    void OnTriggerEnter(Collider other) {
+    void OnCollisionEnter(Collision other) {
+    	Destroy(this.gameObject);
     	if (other.gameObject.CompareTag("Enemy")) {
-    		Destroy(this.gameObject);
+    		//Destroy(this.gameObject);
     		other.gameObject.GetComponent<EnemyAI>().ReceiveDamage(this.damage);
     	}
     }

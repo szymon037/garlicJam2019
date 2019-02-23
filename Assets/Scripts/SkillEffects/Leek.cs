@@ -35,10 +35,10 @@ public enum EnemyState : byte {
 public class Leek : MonoBehaviour
 {
 	public static Dictionary<LeekType, LeekStats> leekTypeStats = new Dictionary<LeekType, LeekStats>() {
-		{LeekType.Spring, new LeekStats(100f, 0.35f, 5f, 5f, 20f)},
-		{LeekType.Summer, new LeekStats(133f, 0.28f, 6.5f, 6f, 25f)},
-		{LeekType.Fall, new LeekStats(150f, 0.21f, 8f, 8f, 30f)},
-		{LeekType.Winter, new LeekStats(166f, 0.14f, 10f, 10f, 35f)}
+		{LeekType.Spring, new LeekStats(100f, 0.35f, 5f, 100f, 20f)},
+		{LeekType.Summer, new LeekStats(133f, 0.28f, 6.5f, 100f, 25f)},
+		{LeekType.Fall, new LeekStats(150f, 0.21f, 8f, 100f, 30f)},
+		{LeekType.Winter, new LeekStats(166f, 0.14f, 10f, 100f, 35f)}
 	};
 
 	public LeekStats stats = new LeekStats();
@@ -46,6 +46,7 @@ public class Leek : MonoBehaviour
 	private EnemyState state;
 	public GameObject bulletPrefab;
 	public Transform target;
+	public float changeDirectionTimer = 0f;
 
 	void Start()
 	{
@@ -57,6 +58,14 @@ public class Leek : MonoBehaviour
 	void Update() {
 		if (state == EnemyState.Searching) {
 			SeekEnemies();
+			if (changeDirectionTimer > 0f) {
+				changeDirectionTimer -= Time.deltaTime;
+			} else {
+				//transform.rotation = Quaternion.Lerp();
+				changeDirectionTimer = Random.Range(2f, 6f);
+				transform.Rotate(0f, Random.Range(40f, 75f), 0f);
+			}
+			transform.Translate(transform.forward * stats.speed * Time.deltaTime);
 		} else {
 			Chase();
 		}
@@ -77,6 +86,10 @@ public class Leek : MonoBehaviour
     	ToggleState();
     }
 
+    public void RandomWalker() {
+
+    }
+
     public Transform FindClosestTarget(Collider[] objects) {
     	if (objects.Length <= 0) return null;
     	if (objects.Length == 1) return objects[0].gameObject.transform;
@@ -93,7 +106,7 @@ public class Leek : MonoBehaviour
     } 
 
     public void Chase() {
-    	this.transform.position = Vector3.MoveTowards(this.transform.position, target.position, stats.speed);
+    	this.transform.position = Vector3.MoveTowards(this.transform.position, target.position, stats.speed * Time.deltaTime);
     }
 
     public void ToggleState() {
