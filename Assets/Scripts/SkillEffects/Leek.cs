@@ -65,7 +65,7 @@ public class Leek : MonoBehaviour
 				changeDirectionTimer = Random.Range(2f, 6f);
 				transform.Rotate(0f, Random.Range(40f, 75f), 0f);
 			}
-			transform.Translate(transform.forward * stats.speed * Time.deltaTime);
+			transform.Translate(-transform.forward * stats.speed * Time.deltaTime);
 		} else {
 			Chase();
 		}

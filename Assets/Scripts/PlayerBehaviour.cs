@@ -19,6 +19,7 @@ public class PlayerBehaviour : MonoBehaviour
     public Camera tpsCamera = null;
     public Vector3 offset = new Vector3(4f, 1f, 4f);
     public float rotationspeed;
+    public ParticleSystem[] psssssssss = null;
 
     // Start is called before the first frame update
     void Start()
@@ -28,6 +29,7 @@ public class PlayerBehaviour : MonoBehaviour
         weaponsData.ForEach(w => ammoCountsForWeapons.Add(w.weaponName, w.infiniteAmmo ? null : (int?)0));
         activeWeapon = weaponsData[0];
         //tpsCamera.transform.position = transform.position + offset;
+        psssssssss = GetComponentsInChildren<ParticleSystem>();
     }
 
     // Update is called once per frame
@@ -38,6 +40,7 @@ public class PlayerBehaviour : MonoBehaviour
         //tpsCamera.transform.LookAt(this.transform);
         if (Input.GetMouseButton(0)) {
             Shoot();
+            foreach (var ps in psssssssss) ps.Play();
         }
 
         float x, z;
