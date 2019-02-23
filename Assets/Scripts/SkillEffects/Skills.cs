@@ -10,6 +10,7 @@ public class Skills : MonoBehaviour
 
 	public static float bombRadius = 5f;
 	public static float bombDamage = 25f;
+	public static float bombTimer = 2.5f;
 
 	public static void OnionsSadness(Vector3 origin, Vector3 target) {
 		Debug.Log("sadness called");
@@ -23,7 +24,9 @@ public class Skills : MonoBehaviour
 	}
 
 	public static void OnionBomb(Vector3 origin, Vector3 target) {
-		(Instantiate(Resources.Load("Prefabs/onionbomb") as GameObject, origin, Quaternion.identity) as GameObject).GetComponent<OnionBomb>().BombInit(5f, 25f, 2.5f);
+		(Instantiate(Resources.Load("Prefabs/onionbomb") as GameObject, origin, Quaternion.identity) as GameObject).GetComponent<OnionBomb>().BombInit(bombRadius, bombDamage, bombTimer);
+		Skill s = PlayerStats.GetInstance().skills.Where(x => x.skillName == "OnionBomb").ToArray()[0];
+		PlayerStats.GetInstance().SetCooldownTimer(s.skillName, s.cooldown);
 	}
 
 	public static void SummonLeek(Vector3 origin, Vector3 target) {
@@ -33,6 +36,8 @@ public class Skills : MonoBehaviour
 		nameToSpawn += "Leek";
 		//Instantiate(leek)
 		GameObject leek = Resources.Load("Prefabs/" + nameToSpawn) as GameObject;
-		(Instantiate(leek, origin, Quaternion.identity) as GameObject).GetComponent<Leek>().Init((LeekType)System.Enum.Parse(typeof(LeekType), _nameToSpawn));
+		(Instantiate(leek, origin, Quaternion.identity) as GameObject).GetComponentInChildren<Leek>().Init((LeekType)System.Enum.Parse(typeof(LeekType), _nameToSpawn));
+		Skill s = PlayerStats.GetInstance().skills.Where(x => x.skillName == "SummonLeek").ToArray()[0];
+		PlayerStats.GetInstance().SetCooldownTimer(s.skillName, s.cooldown);
 	}
 }

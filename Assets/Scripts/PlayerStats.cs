@@ -5,7 +5,7 @@ using Flags = System.Collections.Generic.Dictionary<string, bool>;
 using System.Reflection;
 using Timers = System.Collections.Generic.Dictionary<string, float>;
 
-public struct Attributes {
+public class Attributes {
 	public float speed;
 	public float fireRateBonus;
 	public float damageBonus;
@@ -20,7 +20,7 @@ public struct Attributes {
 	}	
 }
 
-public struct Skill {
+public class Skill {
 	public System.Action<Vector3, Vector3> usage;
 	public string skillName;
 	public float cooldown;
@@ -33,8 +33,6 @@ public struct Skill {
 		this.damage = _damage;
 	}
 }
-
-
 
 public class PlayerStats 
 {
@@ -54,22 +52,26 @@ public class PlayerStats
 	}
 
 	private PlayerStats() {
-		stats = new Attributes();
+		stats = new Attributes(6.5f);
 		currency = 0;
 		flags = new Flags();
 		flags.Add("isHit", false);
 		skills = new List<Skill>();
 		timers.Add("isHit", 0f);
-		foreach (var skill in skills) {
-			timers.Add(skill.skillName, 0f);
-		}
+		
 
 		Dictionary<string, KeyValuePair<float, float?>> skillData = new Dictionary<string, KeyValuePair<float, float?>>() {
-			{"OnionsSadness", new KeyValuePair<float, float?>(15f, null)}
+			{"OnionsSadness", new KeyValuePair<float, float?>(15f, null)},
+			{"OnionBomb", new KeyValuePair<float, float?>(30f, 25f)},
+			{"SummonLeek", new KeyValuePair<float, float?>(45f, null)}
 		};
 		
 		foreach (var entry in skillData) {
 			skills.Add(new Skill(entry.Key, entry.Value.Key, entry.Value.Value));
+		}
+
+		foreach (var skill in skills) {
+			timers.Add(skill.skillName, 0f);
 		}
 	}	
 
@@ -89,5 +91,44 @@ public class PlayerStats
 
 	public void SetCooldownTimer(string skillName, float timerValue) {
 		this.timers[skillName] = timerValue;
+		Debug.Log("im here");
+	}
+
+	public void AcquireCurrency(int amount) {
+		this.currency += amount;
+	}
+
+	public Skill FindSkillWithName(string s) {
+		foreach (var skill in skills) {
+			if (s == skill.skillName) return skill;
+		}
+
+		return null;
+	}
+
+	public void UpgradeAttribute(string attrName, int currencyCost) {
+		if (currency < currencyCost) return;
+		else AcquireCurrency(-currencyCost);
+		FieldInfo field = null;
+		switch (attrName) {
+			case "speed":
+				field = stats.GetType().GetField(attrName, BindingFlags.Instance | BindingFlags.Public);
+				field.SetValue(stats, (float)field.GetValue(stats) + 1.5f);
+				break;
+			case "fireRateBonus":
+				field = stats.GetType().GetField(attrName, BindingFlags.Instance | BindingFlags.Public);
+				field.SetValue(stats, (float)field.GetValue(stats) + 0.05f);
+				break;
+			case "damageBonus":
+				field = stats.GetType().GetField(attrName, BindingFlags.Instance | BindingFlags.Public);
+				field.SetValue(stats, (float)field.GetValue(stats) + 2.5f);
+				break;
+			case "health":
+				field = stats.GetType().GetField(attrName, BindingFlags.Instance | BindingFlags.Public);
+				FieldInfo anotherField = stats.GetType().GetField("maxHealth", BindingFlags.Instance | BindingFlags.Public);
+				anotherField.SetValue(stats, (float)anotherField.GetValue(stats) + 15f);
+				field.SetValue(stats, (float)field.GetValue(stats) + 15f);
+				break;
+		}
 	}
 }

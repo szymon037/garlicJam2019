@@ -58,6 +58,10 @@ public class EnemyAI : MonoBehaviour
     	Destroy(this.gameObject);
     }
 
+    public void AddCurrencyToPlayer() {
+    	PlayerStats.GetInstance().AcquireCurrency(this.currencyOnKill);
+    }
+
     void OnCollisionEnter(Collision other) {
     	if (other.gameObject.CompareTag("Player") && !PlayerStats.GetInstance().flags["isHit"]) {
     		PlayerStats.GetInstance().ToggleFlag("isHit", true);

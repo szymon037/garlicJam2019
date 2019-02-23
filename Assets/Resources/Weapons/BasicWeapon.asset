@@ -19,5 +19,6 @@ MonoBehaviour:
   maxAmmo: 0
   infiniteAmmo: 1
   weaponSprite: {fileID: 0}
-  bulletPrefab: {fileID: 0}
+  bulletPrefab: {fileID: 60027237936621834, guid: 96bf54408b61bab418ef282258b97f1c,
+    type: 3}
   bulletColor: {r: 0.7735849, g: 0, b: 0, a: 0}

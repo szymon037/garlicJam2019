@@ -4,6 +4,7 @@ using System.Linq;
 using System.Collections.Generic;
 using UnityEngine;
 
+[RequireComponent(typeof(Rigidbody))]
 public class PlayerBehaviour : MonoBehaviour
 {
     public List<Weapon> weaponsData = new List<Weapon>();
@@ -24,13 +25,7 @@ public class PlayerBehaviour : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
-        #if DEBUG
-            foreach (var skill in PlayerStats.GetInstance().skills) {
-                Debug.Log(string.Format("{0}, {1}, {2}", skill.skillName, skill.cooldown, (skill.damage == null ? "null" : skill.damage.ToString())));
-            }
-            PlayerStats.GetInstance().skills[0].usage(Vector3.zero, Vector3.zero);
-        #endif
-        if (Input.GetMouseButtonDown(0)) {
+        if (Input.GetMouseButton(0)) {
             Shoot();
         }
 
@@ -44,17 +39,29 @@ public class PlayerBehaviour : MonoBehaviour
             fireRateTimer -= Time.deltaTime;
         }
 
+        if (Input.GetKeyDown(KeyCode.Z) && PlayerStats.GetInstance().timers["OnionsSadness"] <= 0f) {
+            PlayerStats.GetInstance().FindSkillWithName("OnionsSadness").usage(this.transform.position, Vector3.zero);
+        } else if (Input.GetKeyDown(KeyCode.X) && PlayerStats.GetInstance().timers["OnionBomb"] <= 0f) {
+            PlayerStats.GetInstance().FindSkillWithName("OnionBomb").usage(this.transform.position, Vector3.zero);
+        } else if (Input.GetKeyDown(KeyCode.C) && PlayerStats.GetInstance().timers["SummonLeek"] <= 0f) {
+            PlayerStats.GetInstance().FindSkillWithName("SummonLeek").usage(this.transform.position + new Vector3(2f, 0f, 2f), Vector3.zero);
+        }
+
         if (PlayerStats.GetInstance().timers["isHit"] > 0f) {
             PlayerStats.GetInstance().timers["isHit"] -= Time.deltaTime;
         } else {
             PlayerStats.GetInstance().ToggleFlag("isHit", false);
         }
 
-        UpdateCooldowns();
+        //UpdateCooldowns();
+
+       // DebugTimers();
 
     }
 
     public void Shoot() {
+        if (this.fireRateTimer > 0f) return;
+        if (this.activeWeapon == null) return;
         if (!this.activeWeapon.infiniteAmmo) {
             if (ammoCountsForWeapons[activeWeapon.weaponName] > 0) ammoCountsForWeapons[activeWeapon.weaponName]--;
         }
@@ -88,6 +95,12 @@ public class PlayerBehaviour : MonoBehaviour
             Destroy(other.gameObject);
             this.ammoCountsForWeapons[other.gameObject.GetComponent<WeaponPickup>().weaponName] += other.gameObject.GetComponent<WeaponPickup>().ammoValue;
             this.ammoCountsForWeapons[other.gameObject.GetComponent<WeaponPickup>().weaponName] = (int)Mathf.Clamp((int)this.ammoCountsForWeapons[other.gameObject.GetComponent<WeaponPickup>().weaponName], 0, this.activeWeapon.maxAmmo);
+        }
+    }
+
+    public void DebugTimers() {
+        foreach (var t in PlayerStats.GetInstance().timers) {
+            Debug.Log(string.Format("{0}, {1}", t.Key, t.Value));
         }
     }
 }
