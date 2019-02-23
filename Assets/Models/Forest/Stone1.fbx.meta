@@ -1,14 +1,14 @@
 fileFormatVersion: 2
-guid: ab0667b4ce389a543be77ca627e5353d
+guid: a36addf6f51489e4bb2953e4a063e10d
 ModelImporter:
   serializedVersion: 23
   fileIDToRecycleName:
     100000: //RootNode
     400000: //RootNode
-    2100000: Material.002
+    2100000: Stone
     2300000: //RootNode
     3300000: //RootNode
-    4300000: Plane
+    4300000: Icosphere
   externalObjects: {}
   materials:
     importMaterials: 1
