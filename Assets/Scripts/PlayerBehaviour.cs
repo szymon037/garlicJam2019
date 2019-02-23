@@ -46,9 +46,27 @@ public class PlayerBehaviour : MonoBehaviour
 
         transform.Rotate(0f, rotationspeed * Input.GetAxis("Mouse X"), 0f);
 
-        transform.Translate(x * PlayerStats.GetInstance().stats.speed * Time.deltaTime, 0, z * PlayerStats.GetInstance().stats.speed * Time.deltaTime);
+        //transform.Translate(x * PlayerStats.GetInstance().stats.speed * Time.deltaTime, 0, z * PlayerStats.GetInstance().stats.speed * Time.deltaTime);
 
-       // rb.velocity = (!Mathf.Approximately(x, 0f) && !Mathf.Approximately(z, 0f) ? new Vector3(x, 0f, z) : transform.forward * PlayerStats.GetInstance().stats.speed);
+        // rb.velocity = (!Mathf.Approximately(x, 0f) && !Mathf.Approximately(z, 0f) ? new Vector3(x, 0f, z) : transform.forward * PlayerStats.GetInstance().stats.speed);
+        rb.velocity = Vector3.zero;
+        if ((Input.GetKey(KeyCode.A) || Input.GetKey(KeyCode.LeftArrow)) /*&& !isRotating*/)
+        {
+            rb.velocity += transform.forward * PlayerStats.GetInstance().stats.speed;
+            Debug.Log("AAAA");
+        }
+        if ((Input.GetKey(KeyCode.D) || Input.GetKey(KeyCode.RightArrow)) /*&& !isRotating*/)
+        {
+            rb.velocity += -transform.forward * PlayerStats.GetInstance().stats.speed;
+        }
+        if ((Input.GetKey(KeyCode.S) || Input.GetKey(KeyCode.DownArrow))/* && !isRotating*/)
+        {
+            rb.velocity += -transform.right * PlayerStats.GetInstance().stats.speed;
+        }
+        if ((Input.GetKey(KeyCode.W) || Input.GetKey(KeyCode.UpArrow)) /*&& !isRotating*/)
+        {
+            rb.velocity += transform.right * PlayerStats.GetInstance().stats.speed;
+        }
 
         string input = Input.inputString;
 
@@ -95,7 +113,7 @@ public class PlayerBehaviour : MonoBehaviour
         this.fireRateTimer = Mathf.Clamp(this.activeWeapon.baseFireRate - PlayerStats.GetInstance().stats.fireRateBonus, maximumFireRate, 100f);
         /*spawn a bullet*/
         GameObject bullet = Instantiate(this.activeWeapon.bulletPrefab, shootpoint.position, Quaternion.identity) as GameObject;
-        bullet.GetComponent<Bullet>().Init(this.activeWeapon.baseDamage + PlayerStats.GetInstance().stats.damageBonus, this.activeWeapon.bulletSpeed, transform.forward);
+        bullet.GetComponent<Bullet>().Init(this.activeWeapon.baseDamage + PlayerStats.GetInstance().stats.damageBonus, this.activeWeapon.bulletSpeed, transform.right);
     }
 
     public void ChangeWeapon(int index) {
