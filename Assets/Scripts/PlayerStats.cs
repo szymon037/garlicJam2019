@@ -19,7 +19,17 @@ public class Attributes {
 		damageBonus = 0f;
 	}
 
-	public override string ToString() => string.Format("{0}, {1}, {2}, {3}, {4}", speed,fireRateBonus,damageBonus, health,maxHealth);	
+	public override string ToString() {
+		string result = "";
+		result += "Speed: " + System.Math.Round(speed, 2).ToString();
+		result += '\n';
+		result += "Fire rate bonus: " + System.Math.Round(fireRateBonus, 2).ToString();
+		result += '\n';
+		result += "Damage bonus: " + System.Math.Round(damageBonus, 2).ToString();
+		result += '\n';
+		result += "Max Health: " + System.Math.Round(maxHealth, 0).ToString();
+		return result;
+	}	
 }
 
 public class Skill {
@@ -45,6 +55,7 @@ public class PlayerStats
 	public Flags flags;
 
 	public Timers timers = new Timers();
+	public int score;
 
 	public List<Skill> skills;
 
@@ -56,6 +67,7 @@ public class PlayerStats
 	private PlayerStats() {
 		stats = new Attributes(6.5f);
 		currency = 0;
+		score = 0;
 		flags = new Flags();
 		flags.Add("isHit", false);
 		skills = new List<Skill>();

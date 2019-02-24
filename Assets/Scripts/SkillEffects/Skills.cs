@@ -5,11 +5,11 @@ using System.Linq;
 
 public class Skills : MonoBehaviour
 {
-	public static float fearRadius = 5f;
+	public static float fearRadius = 15f;
 	public static float fearDuration = 15f;
 
-	public static float bombRadius = 5f;
-	public static float bombDamage = 25f;
+	public static float bombRadius = 7.5f;
+	public static float bombDamage = 150f;
 	public static float bombTimer = 2.5f;
 
 	public static void OnionsSadness(Vector3 origin, Vector3 target) {
@@ -21,12 +21,15 @@ public class Skills : MonoBehaviour
 		}
 		Skill s = PlayerStats.GetInstance().skills.Where(x => x.skillName == "OnionsSadness").ToArray()[0];
 		PlayerStats.GetInstance().SetCooldownTimer(s.skillName, s.cooldown);
+		PlayerBehaviour.tears.Play();
 	}
 
 	public static void OnionBomb(Vector3 origin, Vector3 target) {
-		(Instantiate(Resources.Load("Prefabs/onionbomb") as GameObject, origin, Quaternion.identity) as GameObject).GetComponent<OnionBomb>().BombInit(bombRadius, bombDamage, bombTimer);
+		GameObject bomb = Instantiate(Resources.Load("Prefabs/onionbomb") as GameObject, origin, Quaternion.identity) as GameObject;
+		bomb.GetComponent<OnionBomb>().BombInit(bombRadius, bombDamage, bombTimer);
 		Skill s = PlayerStats.GetInstance().skills.Where(x => x.skillName == "OnionBomb").ToArray()[0];
 		PlayerStats.GetInstance().SetCooldownTimer(s.skillName, s.cooldown);
+		bomb.GetComponent<Rigidbody>().AddTorque(bomb.gameObject.transform.right * 1.5f, ForceMode.Impulse);
 	}
 
 	public static void SummonLeek(Vector3 origin, Vector3 target) {

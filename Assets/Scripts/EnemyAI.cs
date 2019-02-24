@@ -2,7 +2,6 @@
 using System.Collections.Generic;
 using UnityEngine;
 
-[RequireComponent(typeof(Rigidbody))]
 public class EnemyAI : MonoBehaviour
 {
 	public float health;
@@ -12,6 +11,9 @@ public class EnemyAI : MonoBehaviour
   	public float knockbackOnDamageTaken;
   	public float knockbackPower;
   	public int currencyOnKill;
+  	public int lower_bound;
+  	public int upper_bound;
+  	public int scoreValue;
   	public float runAwayTimer = 0f;
   	public static Transform player = null;
 
@@ -20,24 +22,35 @@ public class EnemyAI : MonoBehaviour
   	}
 
     // Start is called before the first frame update
-    void Start()
+    public void Start()
     {
+    	this.currencyOnKill = Random.Range(lower_bound, upper_bound);
         if (player == null) player = GameObject.FindWithTag("Player").transform;
+        health = Random.Range(120f, 180f);
+        damage = Random.Range(15f, 30f);
+        speed = Random.Range(3f, 6f);
+        scoreValue = Random.Range(100, 201);
     }
 
     // Update is called once per frame
     void Update()
     {	
+
         if (runAwayTimer > 0f) {
         	runAwayTimer -= Time.deltaTime;
         	RunAwayFromPlayer();
         } else {
-        	ChasePlayer();
+        	try {
+        		transform.LookAt(player);
+        		ChasePlayer();
+        	} catch (System.Exception) {}
         }
+        transform.rotation = Quaternion.Euler(-90f, transform.eulerAngles.y + 110f, transform.eulerAngles.z);
     }
 
     public void ChasePlayer() {
     	this.transform.position = Vector3.MoveTowards(this.transform.position, player.position, speed * Time.deltaTime);
+    	//this.transform.position = new Vector3(this.transform.position.x, 0f, this.transform.position.z);
     }
 
     public void BeginRunAway(float timerValue) {
@@ -55,11 +68,18 @@ public class EnemyAI : MonoBehaviour
     }
 
     public void Die() {
+    	GameObject leek = GameObject.FindWithTag("Leek");
+		if (leek != null) {
+			leek.GetComponent<Leek>().target = null;
+			leek.GetComponent<Leek>().ToggleState();
+		}
+		AddCurrencyToPlayer();
     	Destroy(this.gameObject);
     }
 
     public void AddCurrencyToPlayer() {
     	PlayerStats.GetInstance().AcquireCurrency(this.currencyOnKill);
+    	UpgradeManager.instance.UpdateCurrency();
     }
 
     void OnCollisionEnter(Collision other) {
@@ -68,4 +88,8 @@ public class EnemyAI : MonoBehaviour
     		PlayerStats.GetInstance().ChangeHealth(-this.damage);
     	}
     } 
+
+   public void AddScore() {
+   		PlayerStats.GetInstance().score += this.scoreValue;
+   }
 }

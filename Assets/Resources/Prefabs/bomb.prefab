@@ -11,6 +11,7 @@ GameObject:
   - component: {fileID: 5650170427210741674}
   - component: {fileID: 6405179456141585338}
   - component: {fileID: 8655625934979756067}
+  - component: {fileID: 2523430660132241120}
   m_Layer: 0
   m_Name: bomb
   m_TagString: Untagged
@@ -78,3 +79,17 @@ MeshRenderer:
   m_SortingLayerID: 0
   m_SortingLayer: 0
   m_SortingOrder: 0
+--- !u!64 &2523430660132241120
+MeshCollider:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 6447598202894391409}
+  m_Material: {fileID: 0}
+  m_IsTrigger: 0
+  m_Enabled: 1
+  serializedVersion: 3
+  m_Convex: 1
+  m_CookingOptions: 14
+  m_Mesh: {fileID: 4300000, guid: 3e8efb960f60cc0419b9e002c8675a71, type: 3}

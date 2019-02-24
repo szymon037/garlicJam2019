@@ -123,7 +123,6 @@ GameObject:
   - component: {fileID: 2441354154638632570}
   - component: {fileID: 2441354154638632564}
   - component: {fileID: 2441354154638632567}
-  - component: {fileID: 2441354154638632568}
   - component: {fileID: 2441354154638632571}
   - component: {fileID: 3979353504970651667}
   m_Layer: 0
@@ -167,7 +166,8 @@ MeshRenderer:
   m_RenderingLayerMask: 1
   m_RendererPriority: 0
   m_Materials:
-  - {fileID: 10303, guid: 0000000000000000f000000000000000, type: 0}
+  - {fileID: 2100000, guid: adafc259d9026774e9618dab66bf2b97, type: 2}
+  - {fileID: 0}
   m_StaticBatchInfo:
     firstSubMesh: 0
     subMeshCount: 0
@@ -200,29 +200,6 @@ BoxCollider:
   serializedVersion: 2
   m_Size: {x: 1, y: 1, z: 1}
   m_Center: {x: 0, y: 0, z: 0}
---- !u!114 &2441354154638632568
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 2441354154638632566}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: a519ce015def9694ba4efd0d4b5667b8, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  weaponsData:
-  - {fileID: 11400000, guid: 0714c24219d9a1e46981663bd39ebc0c, type: 2}
-  activeWeapon: {fileID: 0}
-  fireRateTimer: 0
-  shootpoint: {fileID: 2441354154622532169}
-  hitTimer: 0
-  moveDir: {x: 0, y: 0, z: 0}
-  rb: {fileID: 0}
-  tpsCamera: {fileID: 2441354153847466482}
-  offset: {x: 4, y: 4, z: 4}
-  rotationspeed: 5
 --- !u!54 &2441354154638632571
 Rigidbody:
   m_ObjectHideFlags: 0
@@ -301,6 +278,18 @@ PrefabInstance:
     - target: {fileID: 400000, guid: 427415074d7b0924aab9cac686c61151, type: 3}
       propertyPath: m_LocalEulerAnglesHint.z
       value: 0
+      objectReference: {fileID: 0}
+    - target: {fileID: 2300000, guid: 427415074d7b0924aab9cac686c61151, type: 3}
+      propertyPath: m_Materials.Array.size
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 2300000, guid: 427415074d7b0924aab9cac686c61151, type: 3}
+      propertyPath: m_Materials.Array.data[0]
+      value: 
+      objectReference: {fileID: 2100000, guid: e095310f3cb9e5443b62363bd8f55f7c, type: 2}
+    - target: {fileID: 2300000, guid: 427415074d7b0924aab9cac686c61151, type: 3}
+      propertyPath: m_Materials.Array.data[1]
+      value: 
       objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 427415074d7b0924aab9cac686c61151, type: 3}

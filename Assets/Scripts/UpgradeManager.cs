@@ -36,10 +36,16 @@ public class UpgradeManager : MonoBehaviour
 
 	public List<Text> costTexts = new List<Text>();
 
+	public Text statsDisplay;
 
+	public static UpgradeManager instance = null;
+
+	public AudioClip clip;
+	public AudioSource src;
     // Start is called before the first frame update
     void Start()
     {
+    	instance = this;
     	upgradeButtons = upgradePanel.GetComponentsInChildren<Button>().ToList();
         foreach (var button in upgradeButtons) {
         	button.onClick.AddListener(() => Upgrade(button.gameObject.transform.name));
@@ -50,14 +56,17 @@ public class UpgradeManager : MonoBehaviour
         currency.text = string.Format("Available currency: {0}", PlayerStats.GetInstance().currency.ToString());
         UpdateCostTexts();
     	UpdateLevelTexts();
+    	UpdateStatsDisplay();
     }
 
     // Update is called once per frame
     void Update()
     {
+    	instance = this;
         if (Input.GetKeyDown(KeyCode.B)) {
         	upgradePanel.SetActive(!upgradePanel.activeSelf);
         	currency.gameObject.SetActive(upgradePanel.activeSelf);
+        	Time.timeScale = System.Convert.ToInt32(!upgradePanel.activeSelf);
         }
     }
 
@@ -66,9 +75,12 @@ public class UpgradeManager : MonoBehaviour
     	Debug.Log("here with " + upgradeName);
     	PlayerStats.GetInstance().UpgradeAttribute(upgradeName, upgradeLevelWithPrice[upgradeName].Key);
     	upgradeLevelWithPrice[upgradeName] = new KeyValuePair<int, int>(upgradeLevelWithPrice[upgradeName].Key + upgradeValuesSteps[upgradeName].Value, upgradeLevelWithPrice[upgradeName].Value + 1);
-    	currency.text = string.Format("Available currency: {0}", PlayerStats.GetInstance().currency.ToString());
+    	currency.text = string.Format("Available layers: {0}", PlayerStats.GetInstance().currency.ToString());
     	UpdateCostTexts();
     	UpdateLevelTexts();
+    	UpdateStatsDisplay();
+    	UpdateCurrency();
+    	src.PlayOneShot(clip, 0.5f);
     }
 
     public void UpdateLevelTexts() {
@@ -81,5 +93,15 @@ public class UpgradeManager : MonoBehaviour
     	for (int i = 0; i < costTexts.Count; ++i) {
     		costTexts[i].text = string.Format("Cost: {0}", upgradeLevelWithPrice[costTexts[i].gameObject.transform.name].Key);
     	}
+    }
+
+    public void UpdateStatsDisplay() {
+    	//statsDisplay.text = string.Format("Your stats: {0}", PlayerStats.GetInstance().stats.ToString());
+    	statsDisplay.text = "Your stats: \n";
+    	statsDisplay.text += PlayerStats.GetInstance().stats.ToString();
+    }
+
+    public void UpdateCurrency() {
+    	currency.text = string.Format("Available layers: {0}", PlayerStats.GetInstance().currency.ToString());
     }
 }

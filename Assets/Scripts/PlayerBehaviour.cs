@@ -20,6 +20,11 @@ public class PlayerBehaviour : MonoBehaviour
     public Vector3 offset = new Vector3(4f, 1f, 4f);
     public float rotationspeed;
     public ParticleSystem[] psssssssss = null;
+    public AudioClip[] clips;
+    public AudioSource src;
+    public UnityEngine.UI.Slider hp;
+    public static ParticleSystem tears;
+    public GameObject knife = null;
 
     // Start is called before the first frame update
     void Start()
@@ -30,17 +35,21 @@ public class PlayerBehaviour : MonoBehaviour
         activeWeapon = weaponsData[0];
         //tpsCamera.transform.position = transform.position + offset;
         psssssssss = GetComponentsInChildren<ParticleSystem>();
+        tears = psssssssss[2];
+        knife = GameObject.Find("knife");
+        knife.SetActive(false);
     }
 
     // Update is called once per frame
     void Update()
     {   
-        Debug.DrawRay(this.transform.position, transform.forward * 20, Color.red, 5f);
+        //Debug.DrawRay(this.transform.position, transform.forward * 20, Color.red, 5f);
         //tpsCamera.transform.position = transform.position + offset;
         //tpsCamera.transform.LookAt(this.transform);
+        if (Time.timeScale == 0) return;
         if (Input.GetMouseButton(0)) {
             Shoot();
-            foreach (var ps in psssssssss) ps.Play();
+            
         }
 
         float x, z;
@@ -99,6 +108,13 @@ public class PlayerBehaviour : MonoBehaviour
 
         DebugTimers();
 
+        hp.fillRect.GetComponent<UnityEngine.UI.Image>().fillAmount = PlayerStats.GetInstance().stats.health / PlayerStats.GetInstance().stats.maxHealth;
+        if (PlayerStats.GetInstance().timers["OnionsSadness"] > 0f) {
+            knife.SetActive(true);
+        } else {
+            knife.SetActive(false);
+        }
+
     }
 
     public void Shoot() {
@@ -117,6 +133,8 @@ public class PlayerBehaviour : MonoBehaviour
         /*spawn a bullet*/
         GameObject bullet = Instantiate(this.activeWeapon.bulletPrefab, shootpoint.position, Quaternion.identity) as GameObject;
         bullet.GetComponent<Bullet>().Init(this.activeWeapon.baseDamage + PlayerStats.GetInstance().stats.damageBonus, this.activeWeapon.bulletSpeed, transform.right);
+        for (int i = 0; i < 2; ++i) psssssssss[i].Play();
+        src.PlayOneShot(clips[Random.Range(0, clips.Length)], 0.5f);
     }
 
     public void ChangeWeapon(int index) {

@@ -16,18 +16,20 @@ public struct LeekStats {
 	public float speed;
 	public float aggroRadius;
 	public float decayTime;
+	public float damage;
 
-	public LeekStats(float _health, float _fireRate, float _speed, float aggro, float _decay) {
+	public LeekStats(float _health, float _fireRate, float _speed, float aggro, float _decay, float damage) {
 		health = _health;
 		fireRate = _fireRate;
 		speed = _speed;
 		aggroRadius = aggro;
 		decayTime = _decay;
+		this.damage=  damage;
 	}
 }
 
-public enum EnemyState : byte {
-	Searching,
+public enum EnemyState  {
+	Searching = 2,
 	Attacking
 }
 
@@ -35,10 +37,10 @@ public enum EnemyState : byte {
 public class Leek : MonoBehaviour
 {
 	public static Dictionary<LeekType, LeekStats> leekTypeStats = new Dictionary<LeekType, LeekStats>() {
-		{LeekType.Spring, new LeekStats(100f, 0.35f, 5f, 100f, 20f)},
-		{LeekType.Summer, new LeekStats(133f, 0.28f, 6.5f, 100f, 25f)},
-		{LeekType.Fall, new LeekStats(150f, 0.21f, 8f, 100f, 30f)},
-		{LeekType.Winter, new LeekStats(166f, 0.14f, 10f, 100f, 35f)}
+		{LeekType.Spring, new LeekStats(100f, 0.35f, 5f, 100f, 20f, 15f)},
+		{LeekType.Summer, new LeekStats(133f, 0.28f, 6.5f, 100f, 25f, 18f)},
+		{LeekType.Fall, new LeekStats(150f, 0.21f, 8f, 100f, 30f, 21f)},
+		{LeekType.Winter, new LeekStats(166f, 0.14f, 10f, 100f, 35f, 24f)}
 	};
 
 	public LeekStats stats = new LeekStats();
@@ -46,7 +48,10 @@ public class Leek : MonoBehaviour
 	private EnemyState state;
 	public GameObject bulletPrefab;
 	public Transform target;
+	public Transform oldTarget = null;
+	public Transform shootpoint;
 	public float changeDirectionTimer = 0f;
+	public float shotTimer = 0f;
 
 	void Start()
 	{
@@ -69,7 +74,9 @@ public class Leek : MonoBehaviour
 		} else {
 			Chase();
 		}
-
+		Debug.Log(((int)this.state).ToString());
+		oldTarget = target;
+		if (shotTimer > 0f) shotTimer -= Time.deltaTime;
 		if (target == null && state == EnemyState.Attacking) ToggleState();
 	}
     
@@ -106,7 +113,9 @@ public class Leek : MonoBehaviour
     } 
 
     public void Chase() {
-    	this.transform.position = Vector3.MoveTowards(this.transform.position, target.position, stats.speed * Time.deltaTime);
+    	try {
+    		this.transform.position = Vector3.MoveTowards(this.transform.position, target.position, stats.speed * Time.deltaTime);
+    	} catch (System.Exception) {}
     }
 
     public void ToggleState() {
@@ -114,6 +123,13 @@ public class Leek : MonoBehaviour
     		state = EnemyState.Attacking;
     	} else {
     		state = EnemyState.Searching;
+    	}
+    }
+
+    void OnCollisionEnter(Collision other) {
+    	if (other.gameObject.CompareTag("Enemy") && shotTimer <= 0f) {
+    		shotTimer = this.stats.fireRate;
+    		other.gameObject.GetComponent<EnemyAI>().ReceiveDamage(this.stats.damage);
     	}
     }
 
