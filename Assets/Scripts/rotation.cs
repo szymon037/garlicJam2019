@@ -15,6 +15,7 @@ public class rotation : MonoBehaviour
 
     public Vector3 hitPoint = Vector3.zero;
     public Vector3 fromV = Vector3.zero;
+    public Vector3 toV = Vector3.zero;
     public Vector3 rightVector = Vector3.zero;
     public Vector3 lastMove = Vector3.zero;
 
@@ -22,6 +23,10 @@ public class rotation : MonoBehaviour
     public float newAngleZ = 0f;
     public float angleForChangingTransform = 0f;
     public float rotationTimer = 0f;
+    public float lerpTimer = 0f;
+    public float angleX = 0f;
+    public float angleY = 0f;
+
 
     public bool movingForward;
     public bool movingBackward;
@@ -41,6 +46,7 @@ public class rotation : MonoBehaviour
         movingForward = false;
         movingBackward = false;
         rotationTimer = 99f;
+        lerpTimer = 99f;
         didCheckPosition = false;
         topDownZ = true;
         rightLeftZ = false;
@@ -101,6 +107,27 @@ public class rotation : MonoBehaviour
                 oldAngleZ = newAngleZ;
                 newAngleZ += 90f;
                 angleForChangingTransform = 90f;
+            }
+
+            if (movingForward && topDownZ)
+            {
+                angleX = 0f;
+                angleY = 0f;
+            }
+            else if (movingForward && rightLeftZ)
+            {
+                angleX = 0f;
+                angleY = 0f;
+            }
+            else if (movingBackward && topDownZ)
+            {
+                angleY = -180f;
+                angleX = 0f;             
+            }
+            else if (movingBackward && rightLeftZ)
+            {
+                angleY = 0f;
+                angleX = -180f;
             }
         }
     }
@@ -170,7 +197,34 @@ public class rotation : MonoBehaviour
             if (rotationTimer >= 0.5001f)
             {
                 isRotating = false;
+                lerpTimer = 0f;
+                fromV = transform.position;
+                toV = transform.position + transform.right * 0.5f;
+                /*if (movingForward && topDownZ)
+                {
+
+                }
+                else if (movingForward && rightLeftZ)
+                {
+                    
+                }
+                else if (movingBackward && topDownZ)
+                {
+                    
+                }
+                else if (movingBackward && rightLeftZ)
+                {
+                    
+                }*/
             }
+            if (lerpTimer <= 0.2f && !isRotating)
+            {
+                transform.position = Vector3.Lerp(fromV, toV, lerpTimer*2f);
+                lerpTimer += Time.deltaTime;
+                //Debug.Log("<color=red>LERP" + " fromV: " + fromV + " toV:" + toV + " </color>");
+            }
+
+
 
         }
     }
@@ -182,6 +236,7 @@ public class rotation : MonoBehaviour
             gravityVector = -transform.up * gravity;
             didCheckPosition = false;
             changeVectorRight();
+            lerpTimer = 99f;
         }
     }
 
