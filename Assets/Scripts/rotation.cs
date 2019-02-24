@@ -109,7 +109,7 @@ public class rotation : MonoBehaviour
                 angleForChangingTransform = 90f;
             }
 
-            if (movingForward && topDownZ)
+           /* if (movingForward && topDownZ)
             {
                 angleX = 0f;
                 angleY = 0f;
@@ -121,14 +121,14 @@ public class rotation : MonoBehaviour
             }
             else if (movingBackward && topDownZ)
             {
-                angleY = -180f;
-                angleX = 0f;             
+                angleY = 0f;
+                angleX = -180f;              
             }
             else if (movingBackward && rightLeftZ)
             {
-                angleY = 0f;
-                angleX = -180f;
-            }
+                angleY = -180f;
+                angleX = 0f;
+            }*/
         }
     }
 
@@ -194,12 +194,16 @@ public class rotation : MonoBehaviour
             if (isRotating)
                 gravityVector = Vector3.zero;
 
-            if (rotationTimer >= 0.5001f)
+            if (rotationTimer >= 0.5001f && isRotating)
             {
                 isRotating = false;
                 lerpTimer = 0f;
                 fromV = transform.position;
                 toV = transform.position + transform.right * 0.5f;
+                transform.rotation = Quaternion.Euler(angleX, angleY, this.transform.rotation.eulerAngles.z);
+                //playerBody.AddForce(transform.right * 0.00001f, ForceMode.Impulse);
+                Debug.Log("<color=red>LERP" + " fromV: " + fromV + " toV:" + toV + " </color>");
+
                 /*if (movingForward && topDownZ)
                 {
 
@@ -219,8 +223,9 @@ public class rotation : MonoBehaviour
             }
             if (lerpTimer <= 0.2f && !isRotating)
             {
-                transform.position = Vector3.Lerp(fromV, toV, lerpTimer*2f);
+                //transform.position = Vector3.Lerp(fromV, toV, lerpTimer*2f);
                 lerpTimer += Time.deltaTime;
+              //  playerBody.AddForce(transform.right, ForceMode.Impulse);
                 //Debug.Log("<color=red>LERP" + " fromV: " + fromV + " toV:" + toV + " </color>");
             }
 
