@@ -16,16 +16,14 @@ public class EnemySpawner : MonoBehaviour
 
     }
 
-    // Update is called once per frame
-    void Update()
-    {
-        if (spawnTimer > 0f) spawnTimer -= Time.deltaTime;
+    public void Update(){
+    	if (spawnTimer > 0f) spawnTimer-=Time.deltaTime;
         newAngleZ = transform.eulerAngles.z;
          if (/*transform.rotation.z*/newAngleZ >= -0.5f && /*transform.rotation.z*/newAngleZ <= 0.5f)
         {
 	        
 	        if (spawnTimer <= 0f&& enemies < maxEnemies) {
-	        	spawnTimer = 0.75f * 2f;
+	        	spawnTimer = Random.Range(0.5f, 2.5f);
 	        	GameObject g = Instantiate(garlic, this.transform.position + new Vector3(3f, 0f, 3f), Quaternion.identity) as GameObject;
 	        	g.GetComponentInChildren<EnemyAI>().SetAngle(0f);
 	        	enemies++;
@@ -34,7 +32,7 @@ public class EnemySpawner : MonoBehaviour
         else if (/*transform.rotation.z*/newAngleZ >= -90.5f && /*transform.rotation.z*/newAngleZ <= -89.5f || /*transform.rotation.z*/newAngleZ >= 269.5 &&/* transform.rotation.z*/newAngleZ <= 270.5)
         {
            if (spawnTimer <= 0f && enemies < maxEnemies) {
-	        	spawnTimer = 0.75f * 2f;
+	        	spawnTimer = Random.Range(0.5f, 2.5f);
 	        	GameObject g = Instantiate(garlic, this.transform.position + new Vector3(3f, 0f, 3f), Quaternion.identity) as GameObject;
 	        	g.GetComponentInChildren<EnemyAI>().SetAngle(-90f);enemies++;
 	        	// Destroy(g.GetComponentInChildren<Rigidbody>());
@@ -43,7 +41,7 @@ public class EnemySpawner : MonoBehaviour
         else if (/*transform.rotation.z*/newAngleZ >= -180.5f && /*transform.rotation.z*/newAngleZ <= -179.5f || /*transform.rotation.z*/newAngleZ >= 179.5f && /*transform.rotation.z*/newAngleZ <= 180.5f)
         {
           if (spawnTimer <= 0f&& enemies < maxEnemies) {
-	        	spawnTimer = 0.75f * 2f;
+	        	spawnTimer = Random.Range(0.5f, 2.5f);
 	        	GameObject g = Instantiate(garlic, this.transform.position + new Vector3(3f, 0f, 3f), Quaternion.identity) as GameObject;
 	        	g.GetComponentInChildren<EnemyAI>().SetAngle(-180f);enemies++;
 	        	//Destroy(g.GetComponentInChildren<Rigidbody>());
@@ -52,7 +50,7 @@ public class EnemySpawner : MonoBehaviour
         else if (/*transform.rotation.z*/newAngleZ >= -270.5f && /*transform.rotation.z*/newAngleZ <= -269.5f || /*transform.rotation.z*/newAngleZ >= 89.5f && /*transform.rotation.z*/newAngleZ <= 90.5f)
         {
             if (spawnTimer <= 0f&& enemies < maxEnemies) {
-	        spawnTimer = 0.75f * 2f;
+	        spawnTimer = Random.Range(0.5f, 2.5f);
 	        	GameObject g = Instantiate(garlic, this.transform.position + new Vector3(3f, 0f, 3f), Quaternion.identity) as GameObject;
 	        	g.GetComponentInChildren<EnemyAI>().SetAngle(-270f);enemies++;
 	        	// Destroy(g.GetComponentInChildren<Rigidbody>());

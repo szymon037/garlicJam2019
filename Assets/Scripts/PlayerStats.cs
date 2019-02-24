@@ -66,6 +66,10 @@ public class PlayerStats
 
 	public List<Skill> skills;
 
+	public static void ResetInstance() {
+		instance = null;
+	}
+
 	public static PlayerStats GetInstance() {
 		if (instance == null) instance = new PlayerStats();
 		return instance;
@@ -83,7 +87,7 @@ public class PlayerStats
 
 		Dictionary<string, KeyValuePair<float, float?>> skillData = new Dictionary<string, KeyValuePair<float, float?>>() {
 			{"OnionsSadness", new KeyValuePair<float, float?>(15f, null)},
-			{"OnionBomb", new KeyValuePair<float, float?>(30f, 25f)},
+			{"OnionBomb", new KeyValuePair<float, float?>(10f, 25f)},
 			{"SummonLeek", new KeyValuePair<float, float?>(45f, null)}
 		};
 		
@@ -99,7 +103,10 @@ public class PlayerStats
 	public void ChangeHealth(float value) {
 		this.stats.health += value;
 		if (this.stats.health > this.stats.maxHealth) this.stats.health = this.stats.maxHealth;
-		if (this.stats.health < 0f) this.stats.health = 0f;
+		if (this.stats.health < 0f) {
+			this.stats.health = 0f;
+			UnityEngine.SceneManagement.SceneManager.LoadScene("GameOver");
+		}
 	}
 
 	public void ToggleFlag(string key, bool value, float timerValue = 0f) {
