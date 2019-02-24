@@ -16,6 +16,10 @@ public class EnemyAI : MonoBehaviour
   	public int scoreValue;
   	public float runAwayTimer = 0f;
   	public static Transform player = null;
+  	public CurrentBiome biome = CurrentBiome.Forest;
+  	public float gravityAngle;
+  	public Rigidbody rb;
+  	public float gravity =5f;
 
   	void OnDestroy() {
   		/*add animation or sth*/
@@ -30,6 +34,8 @@ public class EnemyAI : MonoBehaviour
         damage = Random.Range(15f, 30f);
         speed = Random.Range(3f, 6f);
         scoreValue = Random.Range(100, 201);
+        Destroy(this.gameObject, 60f);
+        rb = GetComponent<Rigidbody>();
     }
 
     // Update is called once per frame
@@ -45,7 +51,8 @@ public class EnemyAI : MonoBehaviour
         		ChasePlayer();
         	} catch (System.Exception) {}
         }
-        transform.rotation = Quaternion.Euler(-90f, transform.eulerAngles.y + 110f, transform.eulerAngles.z);
+        rb.velocity = -transform.up * gravity;
+        transform.rotation = Quaternion.Euler(-90f, transform.eulerAngles.y + 110f, transform.eulerAngles.z - gravityAngle);
     }
 
     public void ChasePlayer() {
@@ -74,6 +81,7 @@ public class EnemyAI : MonoBehaviour
 			leek.GetComponent<Leek>().ToggleState();
 		}
 		AddCurrencyToPlayer();
+		EnemySpawner.enemies--;
     	Destroy(this.gameObject);
     }
 
@@ -91,5 +99,8 @@ public class EnemyAI : MonoBehaviour
 
    public void AddScore() {
    		PlayerStats.GetInstance().score += this.scoreValue;
+   }
+   public void SetAngle(float angle) {
+
    }
 }

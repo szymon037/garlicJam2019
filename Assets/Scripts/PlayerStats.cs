@@ -46,6 +46,13 @@ public class Skill {
 	}
 }
 
+public enum CurrentBiome {
+	Forest = 0,
+	Eerie,
+	Snowy,
+	Volcanic
+}
+
 public class PlayerStats 
 {
 	private static PlayerStats instance = null;
@@ -65,7 +72,7 @@ public class PlayerStats
 	}
 
 	private PlayerStats() {
-		stats = new Attributes(6.5f);
+		stats = new Attributes(12f);
 		currency = 0;
 		score = 0;
 		flags = new Flags();

@@ -93,7 +93,7 @@ public class PlayerBehaviour : MonoBehaviour
         if (Input.GetKeyDown(KeyCode.Z) && PlayerStats.GetInstance().timers["OnionsSadness"] <= 0f) {
             PlayerStats.GetInstance().FindSkillWithName("OnionsSadness").usage(this.transform.position, Vector3.zero);
         } else if (Input.GetKeyDown(KeyCode.X) && PlayerStats.GetInstance().timers["OnionBomb"] <= 0f) {
-            PlayerStats.GetInstance().FindSkillWithName("OnionBomb").usage(this.transform.position, Vector3.zero);
+            PlayerStats.GetInstance().FindSkillWithName("OnionBomb").usage(this.shootpoint.position, Vector3.zero);
         } else if (Input.GetKeyDown(KeyCode.C) && PlayerStats.GetInstance().timers["SummonLeek"] <= 0f) {
             PlayerStats.GetInstance().FindSkillWithName("SummonLeek").usage(this.transform.position + new Vector3(2f, 0f, 2f), Vector3.zero);
         }
@@ -106,7 +106,7 @@ public class PlayerBehaviour : MonoBehaviour
 
         UpdateCooldowns();
 
-        DebugTimers();
+      //  DebugTimers();
 
         hp.fillRect.GetComponent<UnityEngine.UI.Image>().fillAmount = PlayerStats.GetInstance().stats.health / PlayerStats.GetInstance().stats.maxHealth;
         if (PlayerStats.GetInstance().timers["OnionsSadness"] > 0f) {

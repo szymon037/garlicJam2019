@@ -52,7 +52,7 @@ public class UpgradeManager : MonoBehaviour
         }
         upgradePanel.SetActive(false);
         currency.gameObject.SetActive(false);
-        PlayerStats.GetInstance().AcquireCurrency(10000);
+       // PlayerStats.GetInstance().AcquireCurrency(10000);
         currency.text = string.Format("Available currency: {0}", PlayerStats.GetInstance().currency.ToString());
         UpdateCostTexts();
     	UpdateLevelTexts();

@@ -52,12 +52,16 @@ public class Leek : MonoBehaviour
 	public Transform shootpoint;
 	public float changeDirectionTimer = 0f;
 	public float shotTimer = 0f;
+	public CurrentBiome biome = CurrentBiome.Forest;
+	public Rigidbody rb;
+	public float gravity = 2f;
 
 	void Start()
 	{
 		ps = gameObject.GetComponent<ParticleSystem>();
 		ps.Play();
 		state = EnemyState.Searching;
+		rb = GetComponent<Rigidbody>();
 	}
 
 	void Update() {
@@ -70,8 +74,9 @@ public class Leek : MonoBehaviour
 				changeDirectionTimer = Random.Range(2f, 6f);
 				transform.Rotate(0f, Random.Range(40f, 75f), 0f);
 			}
-			transform.Translate(-transform.forward * stats.speed * Time.deltaTime);
+			rb.velocity = -transform.up * gravity;
 		} else {
+
 			Chase();
 		}
 		Debug.Log(((int)this.state).ToString());
@@ -91,10 +96,6 @@ public class Leek : MonoBehaviour
     	if (enemies.Length <= 0) return;
     	target = FindClosestTarget(enemies);
     	ToggleState();
-    }
-
-    public void RandomWalker() {
-
     }
 
     public Transform FindClosestTarget(Collider[] objects) {

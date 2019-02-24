@@ -12,7 +12,7 @@ public class Bullet : MonoBehaviour
     void Start()
     {	
     	StartCoroutine("RotateBullet");
-        Destroy(this.gameObject, 2f);
+        Destroy(this.gameObject, 3.5f);
     }
 
     // Update is called once per frame
@@ -30,10 +30,11 @@ public class Bullet : MonoBehaviour
     }
 
     void OnTriggerEnter(Collider other) {
-    	Destroy(this.gameObject);
+    	
     	if (other.gameObject.CompareTag("Enemy")) {
     		//Destroy(this.gameObject);
     		other.gameObject.GetComponent<EnemyAI>().ReceiveDamage(this.damage);
+    		Destroy(this.gameObject);
     	}
     }
     IEnumerator RotateBullet() {

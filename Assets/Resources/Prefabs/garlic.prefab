@@ -17,7 +17,7 @@ GameObject:
   - component: {fileID: 6034970521242151123}
   m_Layer: 0
   m_Name: Icosphere
-  m_TagString: Untagged
+  m_TagString: Enemy
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
@@ -107,7 +107,7 @@ Rigidbody:
   m_Mass: 5
   m_Drag: 0
   m_AngularDrag: 0.05
-  m_UseGravity: 1
+  m_UseGravity: 0
   m_IsKinematic: 0
   m_Interpolate: 0
   m_Constraints: 0
@@ -146,7 +146,10 @@ MonoBehaviour:
   currencyOnKill: 0
   lower_bound: 20
   upper_bound: 120
+  scoreValue: 0
   runAwayTimer: 0
+  biome: 0
+  gravityAngle: 0
 --- !u!1 &3054783618964392826
 GameObject:
   m_ObjectHideFlags: 0

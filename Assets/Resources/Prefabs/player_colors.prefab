@@ -106,7 +106,7 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 2441354154622532168}
   m_LocalRotation: {x: -0, y: 0.9994716, z: -0, w: -0.032505214}
-  m_LocalPosition: {x: 2.782, y: 0.76, z: -1.676}
+  m_LocalPosition: {x: 2.723, y: 0.76, z: -1.676}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children: []
   m_Father: {fileID: 2441354154638632570}
@@ -276,12 +276,16 @@ MonoBehaviour:
   q2: {x: 0, y: 0, z: 0, w: 0}
   hitPoint: {x: 0, y: 0, z: 0}
   fromV: {x: 0, y: 0, z: 0}
+  toV: {x: 0, y: 0, z: 0}
   rightVector: {x: 0, y: 0, z: 0}
   lastMove: {x: 0, y: 0, z: 0}
   oldAngleZ: 0
   newAngleZ: 0
   angleForChangingTransform: 0
   rotationTimer: 0
+  lerpTimer: 0
+  angleX: 0
+  angleY: 0
   movingForward: 0
   movingBackward: 0
   didCheckPosition: 0
