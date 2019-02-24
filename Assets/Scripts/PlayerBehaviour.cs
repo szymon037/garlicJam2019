@@ -25,10 +25,14 @@ public class PlayerBehaviour : MonoBehaviour
     public UnityEngine.UI.Slider hp;
     public static ParticleSystem tears;
     public GameObject knife = null;
+    private Animator anim = null;
+    public bool isMoving;
 
     // Start is called before the first frame update
     void Start()
     {
+        
+        anim = GetComponentInChildren<Animator>();
         rb = GetComponent<Rigidbody>();
         //rb.constraints = RigidbodyConstraints.FreezeRotationZ | RigidbodyConstraints.FreezeRotationX | RigidbodyConstraints.FreezeRotationY | RigidbodyConstraints.FreezePositionY;
         weaponsData.ForEach(w => ammoCountsForWeapons.Add(w.weaponName, w.infiniteAmmo ? null : (int?)0));
@@ -38,6 +42,7 @@ public class PlayerBehaviour : MonoBehaviour
         tears = psssssssss[2];
         knife = GameObject.Find("knife");
         knife.SetActive(false);
+        isMoving = false;
     }
 
     // Update is called once per frame
@@ -52,6 +57,8 @@ public class PlayerBehaviour : MonoBehaviour
             
         }
 
+
+
         float x, z;
         x = Input.GetAxisRaw("Horizontal");
         z = Input.GetAxisRaw("Vertical");
@@ -65,20 +72,26 @@ public class PlayerBehaviour : MonoBehaviour
         if ((Input.GetKey(KeyCode.A) || Input.GetKey(KeyCode.LeftArrow)) /*&& !isRotating*/)
         {
             rb.velocity += transform.forward * PlayerStats.GetInstance().stats.speed;
-            Debug.Log("AAAA");
+            isMoving = true;
         }
         if ((Input.GetKey(KeyCode.D) || Input.GetKey(KeyCode.RightArrow)) /*&& !isRotating*/)
         {
             rb.velocity += -transform.forward * PlayerStats.GetInstance().stats.speed;
+            isMoving = true;
         }
         if ((Input.GetKey(KeyCode.S) || Input.GetKey(KeyCode.DownArrow))/* && !isRotating*/)
         {
             rb.velocity += -transform.right * PlayerStats.GetInstance().stats.speed;
+            isMoving = true;
         }
         if ((Input.GetKey(KeyCode.W) || Input.GetKey(KeyCode.UpArrow)) /*&& !isRotating*/)
         {
             rb.velocity += transform.right * PlayerStats.GetInstance().stats.speed;
+            isMoving = true;
         }
+        if (rb.velocity == Vector3.zero)
+            isMoving = false;
+        anim.SetBool("isMoving", isMoving);
 
         string input = Input.inputString;
 
