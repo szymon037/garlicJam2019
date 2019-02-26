@@ -19,9 +19,16 @@ public class EnemyAI : MonoBehaviour
   	public CurrentBiome biome = CurrentBiome.Forest;
   	public float gravityAngle;
   	public Rigidbody rb;
-  	public float gravity =5f;
+  	public float gravity = 10f;
+    public float angleZ = 0f;
 
-  	void OnDestroy() {
+    public bool rightLeft = false;
+    public bool topBottom = false;
+
+    public Vector3 lookPos = Vector3.zero;
+
+       
+    void OnDestroy() {
   		/*add animation or sth*/
   	}
 
@@ -36,23 +43,44 @@ public class EnemyAI : MonoBehaviour
         scoreValue = Random.Range(100, 201);
         Destroy(this.gameObject, 60f);
         rb = GetComponent<Rigidbody>();
+        //transform.rotation = Quaternion.Euler(Vector3.zero);
     }
 
     // Update is called once per frame
     void Update()
-    {	
+    {
+        lookPos = transform.position - player.position;
 
         if (runAwayTimer > 0f) {
         	runAwayTimer -= Time.deltaTime;
         	RunAwayFromPlayer();
-        } else {
-        	try {
-        		transform.LookAt(player);
-        		ChasePlayer();
+        } else if (Vector3.Distance(player.position, transform.position) < 40f){
+        	try{
+                if (topBottom)
+        		    transform.LookAt(player);
+                else if (rightLeft)
+                    transform.rotation = Quaternion.Euler(90f + Mathf.Atan2(lookPos.z, lookPos.y) * Mathf.Rad2Deg, 0f, angleZ);
+
+                ChasePlayer();
         	} catch (System.Exception) {}
         }
-        rb.velocity = -transform.up * gravity;
-        transform.rotation = Quaternion.Euler(-90f, transform.eulerAngles.y + 110f, transform.eulerAngles.z - gravityAngle);
+        if (topBottom)
+            rb.velocity = (angleZ == 0f) ? -transform.up * gravity : transform.up * gravity;
+        else if (rightLeft)
+            rb.velocity = /*(angleZ == 0f) ?*/ -transform.right * gravity /*: transform.right * gravity*/;
+
+
+        //transform.rotation = Quaternion.Euler(new Vector3(0f, transform.rotation.eulerAngles.y, 0f));
+        // transform.rotation = Quaternion.Euler(-90f, transform.eulerAngles.y + 110f, transform.eulerAngles.z - gravityAngle);
+        if (topBottom)
+             transform.rotation = Quaternion.Euler(new Vector3(0f, transform.rotation.eulerAngles.y, angleZ));
+        /*else if (rightLeft)
+             transform.rotation = Quaternion.Euler(new Vector3(transform.rotation.eulerAngles.x, 0f, angleZ));*/
+        //transform.rotation = Quaternion.Euler(new Vector3(transform.rotation.eulerAngles.x, 0f, 0f)); 
+        if (Vector3.Distance(player.position, transform.position) > 175f)
+            Die();
+
+
     }
 
     public void ChasePlayer() {
@@ -101,6 +129,6 @@ public class EnemyAI : MonoBehaviour
    		PlayerStats.GetInstance().score += this.scoreValue;
    }
    public void SetAngle(float angle) {
-
+        angleZ = angle;
    }
 }

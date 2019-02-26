@@ -18,6 +18,8 @@ public class rotation : MonoBehaviour
     public Vector3 toV = Vector3.zero;
     public Vector3 rightVector = Vector3.zero;
     public Vector3 lastMove = Vector3.zero;
+    public Vector3 directionVector = Vector3.zero;
+    public Vector3 directionVectorRotated = Vector3.zero;
 
     public float oldAngleZ = 0f;
     public float newAngleZ = 0f;
@@ -33,6 +35,8 @@ public class rotation : MonoBehaviour
     public bool didCheckPosition;
     public bool topDownZ;
     public bool rightLeftZ;
+
+    public bool destroyArrow = false;
 
 
     void Start()
@@ -52,83 +56,53 @@ public class rotation : MonoBehaviour
         rightLeftZ = false;
         lastMove = transform.position;
         rightVector = Vector3.right;
+        destroyArrow = false;
     }
 
     void FixedUpdate()
     {
-        /*playerBody.velocity = Vector3.zero;
-        if ((Input.GetKey(KeyCode.A) || Input.GetKey(KeyCode.LeftArrow)) && !isRotating)
-        {
-            playerBody.velocity += transform.forward * speed;
-        }
-        if ((Input.GetKey(KeyCode.D) || Input.GetKey(KeyCode.RightArrow)) && !isRotating)
-        {
-            playerBody.velocity += -transform.forward * speed;
-        }
-        if ((Input.GetKey(KeyCode.S) || Input.GetKey(KeyCode.DownArrow)) && !isRotating)
-        {
-            playerBody.velocity += -transform.right * speed;
-        }
-        if ((Input.GetKey(KeyCode.W) || Input.GetKey(KeyCode.UpArrow)) && !isRotating)
-        {
-            playerBody.velocity += transform.right * speed;
-        }
-        */
+
         playerBody.velocity += gravityVector;
 
-        if ((topDownZ && (Vector3.Scale(rightVector, transform.position).x - Vector3.Scale(rightVector, lastMove).x > 0f)) || 
+        if ((topDownZ && (Vector3.Scale(rightVector, transform.position).x - Vector3.Scale(rightVector, lastMove).x > 0f)) ||
             (rightLeftZ && (Vector3.Scale(rightVector, transform.position).y - Vector3.Scale(rightVector, lastMove).y > 0f)))
         {
             movingForward = true;
             movingBackward = false;
         }
-        else if((topDownZ && (Vector3.Scale(rightVector, transform.position).x - Vector3.Scale(rightVector, lastMove).x < 0f)) ||
+        else if ((topDownZ && (Vector3.Scale(rightVector, transform.position).x - Vector3.Scale(rightVector, lastMove).x < 0f)) ||
                 (rightLeftZ && (Vector3.Scale(rightVector, transform.position).y - Vector3.Scale(rightVector, lastMove).y < 0f)))
         {
             movingForward = false;
             movingBackward = true;
         }
+        directionVector = transform.position - lastMove;
+        directionVector = directionVector.normalized;
+
         lastMove = transform.position;
-        
+
+
     }
 
     void OnTriggerEnter(Collider other)
     {
         if (other.gameObject.tag == "rotate")
         {
-            if (movingForward) 
-            {              
+            if (movingForward)
+            {
                 oldAngleZ = newAngleZ;
                 newAngleZ -= 90f;
                 angleForChangingTransform = -90f;
             }
-            else if (movingBackward) 
-            {                
+            else if (movingBackward)
+            {
                 oldAngleZ = newAngleZ;
                 newAngleZ += 90f;
                 angleForChangingTransform = 90f;
             }
+            Debug.Log("ENTER");
 
-           /* if (movingForward && topDownZ)
-            {
-                angleX = 0f;
-                angleY = 0f;
-            }
-            else if (movingForward && rightLeftZ)
-            {
-                angleX = 0f;
-                angleY = 0f;
-            }
-            else if (movingBackward && topDownZ)
-            {
-                angleY = 0f;
-                angleX = -180f;              
-            }
-            else if (movingBackward && rightLeftZ)
-            {
-                angleY = -180f;
-                angleX = 0f;
-            }*/
+            directionVectorRotated = Quaternion.Euler(0f, 0f, angleForChangingTransform) * directionVector;
         }
     }
 
@@ -142,10 +116,10 @@ public class rotation : MonoBehaviour
                 {
                     if ((topDownZ && (Vector3.Scale(rightVector, transform.position).x - Vector3.Scale(rightVector, other.transform.position).x) > 0f) ||
                         (rightLeftZ && (Vector3.Scale(rightVector, transform.position).y - Vector3.Scale(rightVector, other.transform.position).y) > 0f))
-                    {                        
+                    {
                         didCheckPosition = true;
                     }
-                   
+
                 }
                 else if (movingBackward)
                 {
@@ -172,7 +146,7 @@ public class rotation : MonoBehaviour
                     this.transform.position = fromV;
 
                     hitPoint = other.transform.position;
-                    rotationTimer = 0f;
+                    rotationTimer = Time.deltaTime;
                     isRotating = true;
                 }
 
@@ -180,15 +154,17 @@ public class rotation : MonoBehaviour
 
             if (rotationTimer <= 0.5001f && isRotating)
             {
-                q1 = Quaternion.Slerp(Quaternion.Euler(new Vector3(0f, 0f, oldAngleZ)), Quaternion.Euler(new Vector3(0f, 0f, newAngleZ)), rotationTimer * 2);
+                transform.Rotate(new Vector3(0f, 0f, angleForChangingTransform) * Time.deltaTime * 2, Space.World);
+
+                //q1 = Quaternion.Slerp(Quaternion.Euler(new Vector3(0f, 0f, oldAngleZ)), Quaternion.Euler(new Vector3(0f, 0f, newAngleZ)), rotationTimer * 2);
                 q2 = Quaternion.Slerp(Quaternion.Euler(new Vector3(0f, 0f, 0f)), Quaternion.Euler(new Vector3(0f, 0f, angleForChangingTransform)), rotationTimer * 2);
-                transform.rotation = q1;
+                //transform.rotation = q1;
 
                 this.transform.position = new Vector3((fromV.x - hitPoint.x) * Mathf.Cos((q2.eulerAngles.z) / 180f * Mathf.PI) - (fromV.y - hitPoint.y) * Mathf.Sin((q2.eulerAngles.z) / 180f * Mathf.PI) + fromV.x - (fromV.x - hitPoint.x),
                                                       (fromV.x - hitPoint.x) * Mathf.Sin((q2.eulerAngles.z) / 180f * Mathf.PI) + (fromV.y - hitPoint.y) * Mathf.Cos((q2.eulerAngles.z) / 180f * Mathf.PI) + fromV.y - (fromV.y - hitPoint.y),
                                                       this.transform.position.z);
 
-                rotationTimer += Time.deltaTime;           
+                rotationTimer += Time.deltaTime;
             }
 
             if (isRotating)
@@ -197,38 +173,30 @@ public class rotation : MonoBehaviour
             if (rotationTimer >= 0.5001f && isRotating)
             {
                 isRotating = false;
-                lerpTimer = 0f;
-                fromV = transform.position;
-                toV = transform.position + transform.right * 0.5f;
-                transform.rotation = Quaternion.Euler(angleX, angleY, this.transform.rotation.eulerAngles.z);
-                //playerBody.AddForce(transform.right * 0.00001f, ForceMode.Impulse);
-                Debug.Log("<color=red>LERP" + " fromV: " + fromV + " toV:" + toV + " </color>");
-
-                /*if (movingForward && topDownZ)
-                {
-
-                }
-                else if (movingForward && rightLeftZ)
-                {
-                    
-                }
-                else if (movingBackward && topDownZ)
-                {
-                    
-                }
-                else if (movingBackward && rightLeftZ)
-                {
-                    
-                }*/
+                destroyArrow = true;
             }
-            if (lerpTimer <= 0.2f && !isRotating)
+
+            if (rotationTimer >= 0.5001f && !isRotating && didCheckPosition)
+            {
+                transform.position += directionVectorRotated;
+                // transform.position += transform.right * 0.01f;
+
+                //isRotating = false;
+                //lerpTimer = 0f;
+                //fromV = transform.position;
+                //toV = transform.position + transform.right * 0.5f;
+                //transform.rotation = Quaternion.Euler(angleX, angleY, this.transform.rotation.eulerAngles.z);
+                //Debug.Log("<color=red>LERP" + " fromV: " + fromV + " toV:" + toV + " </color>");
+
+            }
+            /*if (lerpTimer <= 0.2f && !isRotating)
             {
                 //transform.position = Vector3.Lerp(fromV, toV, lerpTimer*2f);
                 lerpTimer += Time.deltaTime;
               //  playerBody.AddForce(transform.right, ForceMode.Impulse);
                 //Debug.Log("<color=red>LERP" + " fromV: " + fromV + " toV:" + toV + " </color>");
-            }
-
+            }*/
+            //Debug.Log("STAY");
 
 
         }
@@ -242,6 +210,8 @@ public class rotation : MonoBehaviour
             didCheckPosition = false;
             changeVectorRight();
             lerpTimer = 99f;
+            Debug.Log("EXIT");
+
         }
     }
 

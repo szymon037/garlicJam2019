@@ -79,7 +79,7 @@ public class Leek : MonoBehaviour
 
 			Chase();
 		}
-		Debug.Log(((int)this.state).ToString());
+		//Debug.Log(((int)this.state).ToString());
 		oldTarget = target;
 		if (shotTimer > 0f) shotTimer -= Time.deltaTime;
 		if (target == null && state == EnemyState.Attacking) ToggleState();
