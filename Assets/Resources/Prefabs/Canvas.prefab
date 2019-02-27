@@ -367,7 +367,7 @@ MonoBehaviour:
   skillName: OnionBomb
   img: {fileID: 0}
   t: {fileID: 279719815416886173}
-  textToDisplay: 'Onion Bomb (Z): '
+  textToDisplay: 'Onion Bomb (X): '
 --- !u!1 &279719815448387855
 GameObject:
   m_ObjectHideFlags: 0
